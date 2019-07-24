@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText etAngkaPertama, etAngkaKedua;
     private TextView tvHasil;
     private HasilAdapter hasilAdapter;
-    private ArrayList<String> list;
+    private ArrayList<Hasil> list;
     private RecyclerView recyclerView;
 
     @Override
@@ -45,9 +45,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int angkaKedua = Integer.valueOf(etAngkaKedua.getText().toString());
 
             int hasil = angkaPertama + angkaKedua;
-            list.add(String.valueOf(hasil));
+            Hasil newHasil = new Hasil();
+            newHasil.setAngkaPertama(String.valueOf(angkaPertama));
+            newHasil.setAngkaKedua(String.valueOf(angkaKedua));
+            newHasil.setAngkaHasil(String.valueOf(hasil));
+            newHasil.setImage("https://www.utusan.com.my/polopoly_fs/1.170484.1450458261!/image/image.jpg_gen/derivatives/landscape_1000/image.jpg");
+
+            list.add(newHasil);
+
             hasilAdapter.setList(list);
-            recyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), 3));
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(hasilAdapter);
 
             tvHasil.setText(String.valueOf(hasil));

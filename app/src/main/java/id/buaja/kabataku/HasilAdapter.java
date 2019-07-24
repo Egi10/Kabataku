@@ -1,31 +1,35 @@
 package id.buaja.kabataku;
 
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class HasilAdapter extends RecyclerView.Adapter<HasilAdapter.ViewHolder> {
-    public ArrayList<String> getList() {
-        return list;
-    }
-
-    public void setList(ArrayList<String> list) {
-        this.list = list;
-    }
-
-    private ArrayList<String> list;
+    private ArrayList<Hasil> list;
     private Context context;
 
     public HasilAdapter(Context context) {
         this.context = context;
+    }
+
+    public ArrayList<Hasil> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<Hasil> list) {
+        this.list = list;
     }
 
     @NonNull
@@ -36,34 +40,40 @@ public class HasilAdapter extends RecyclerView.Adapter<HasilAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.tvHasil.setText(getList().get(position));
+        holder.angkaPertama.setText("Angka Pertama : "+getList().get(position).getAngkaPertama());
+        holder.angkaKedua.setText(getList().get(position).getAngkaKedua());
+        holder.angkaHasil.setText(getList().get(position).getAngkaHasil());
+
+        Picasso.get().load(getList().get(position).getImage()).into(holder.imageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, getList().get(position), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("image", getList().get(position).getImage());
+                intent.putExtra("hasil", getList().get(position).getAngkaHasil());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        int list = 0;
-        if (getList().size() > 5) {
-            list = 5;
-        } else {
-            list = getList().size();
-        }
-        return list;
+        return getList().size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvHasil;
+        private TextView angkaPertama, angkaKedua, angkaHasil;
+        private ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvHasil = itemView.findViewById(R.id.tv_hasil);
+            angkaPertama = itemView.findViewById(R.id.tv_angka_pertama);
+            angkaKedua = itemView.findViewById(R.id.tv_angka_kedua);
+            angkaHasil = itemView.findViewById(R.id.tv_hasil);
+            imageView = itemView.findViewById(R.id.iv_image);
         }
     }
 }
